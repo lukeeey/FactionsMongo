@@ -47,12 +47,31 @@ public class FactionsMongoPlugin extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("fmongoconvert") && sender instanceof ConsoleCommandSender) {
-            sender.sendMessage(ChatColor.GOLD + "Converting... (this could take a while!)");
-            factions.convert();
-            fplayers.convert();
-            board.convert();
-            sender.sendMessage(ChatColor.GREEN + "Converted! " + ChatColor.GRAY + "Please restart the server.");
+        if (!command.getName().equalsIgnoreCase("factionsmongo")) {
+            return true;
+        }
+        if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
+            sender.sendMessage(ChatColor.BOLD + "" + ChatColor.GREEN + "FactionsMongo Commands:");
+            sender.sendMessage(ChatColor.GOLD + "/fmongo reload" + ChatColor.GRAY + " - Reload the config");
+            sender.sendMessage(ChatColor.GOLD + "/fmongo import" + ChatColor.GRAY + " - Import JSON data into the database");
+//            sender.sendMessage(ChatColor.GOLD + "/fmongo export" + ChatColor.GRAY + " - Export from the database to JSON data");
+            return true;
+        }
+        switch (args[0].toLowerCase()) {
+            case "reload":
+                reloadConfig();
+                sender.sendMessage(ChatColor.GREEN + "FactionsMongo config has been reloaded!");
+                break;
+            case "import":
+                sender.sendMessage(ChatColor.GOLD + "Importing... (this could take a while!)");
+                factions.convert();
+                fplayers.convert();
+                board.convert();
+                sender.sendMessage(ChatColor.GREEN + "Imported! " + ChatColor.GRAY + "Please restart the server.");
+                break;
+            case "export":
+                sender.sendMessage(ChatColor.RED + "Sorry, this is not implemented yet!");
+                break;
         }
         return true;
     }

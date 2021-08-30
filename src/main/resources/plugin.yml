@@ -6,5 +6,16 @@ loadbefore: [Factions]
 api-version: 1.13
 description: Adds MongoDB storage to the FactionsUUID plugin
 commands:
-  fmongoconvert:
-    description: Convert from JSON flat file storage to MongoDB
+  factionsmongo:
+    aliases: [fmongo]
+    usage: /fmongo <reload/import/help>
+permissions:
+  fmongo.*:
+    default: false
+    children:
+      fmongo.reload:
+        default: op
+      fmongo.import:
+        default: op
+      fmongo.export:
+        default: op
