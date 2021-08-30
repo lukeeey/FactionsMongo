@@ -1,0 +1,11 @@
+name: FactionsMongoDBStorage
+version: ${project.version}
+main: io.github.lukeeey.factionsmongodb.FactionsMongoDBPlugin
+author: lukeeey
+depend: [Factions]
+load: POSTWORLD
+api-version: 1.13
+description: Adds MongoDB storage to the FactionsUUID plugin
+commands:
+  fmongoconvert:
+    description: Convert from JSON flat file storage to MongoDB

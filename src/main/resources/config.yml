@@ -1,0 +1,26 @@
+# =================================================
+#    MongoDB Extension for Factions by lukeeey
+# =================================================
+
+# MongoDB settings
+mongodb:
+  # If a connection-string is specified these will be ignored
+  host: localhost
+  port: 27019
+  username: myuser
+  password: mypass
+
+  # Regardless of whether you use host + port + username + password or connection string authentication,
+  # you must specify the name of the database here
+  database: factions
+
+  # If you would prefer to use a connection string rather than specify the individual details above
+  # then specify it here. An empty string means it will use the username, password, host and port above.
+  # Please note that your password may need to be url encoded if it contains symbols.
+  connection-string: ""
+
+  # The names of the collections (similar to tables in MySQL)
+  collections:
+    board: board
+    factions: factions
+    fplayers: fplayers
