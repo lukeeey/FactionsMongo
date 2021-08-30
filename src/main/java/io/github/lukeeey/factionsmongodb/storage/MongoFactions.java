@@ -42,9 +42,6 @@ public class MongoFactions extends MemoryFactions {
 
     @Override
     public void forceSave(boolean sync) {
-        Bukkit.getLogger().warning("forceSave(" + sync + "): MongoFactions");
-        Bukkit.getLogger().warning("factions.size(): " + factions.size());
-        Bukkit.getLogger().warning("ALL Factions: " + factions.values().stream().map(Faction::getId).collect(Collectors.joining()));
         ReplaceOptions options = new ReplaceOptions().upsert(true);
         for (Faction entity : this.factions.values()) {
             Document document = Document.parse(FactionsPlugin.getInstance().getGson().toJson((MongoFaction) entity));
@@ -75,7 +72,6 @@ public class MongoFactions extends MemoryFactions {
 
     @Override
     public int load() {
-        Bukkit.getLogger().warning("LOADING FACTIONS");
         MongoCursor<Document> iterator = collection.find().iterator();
         while (iterator.hasNext()) {
             Document doc = iterator.next();
@@ -87,9 +83,7 @@ public class MongoFactions extends MemoryFactions {
             this.updateNextIdForId(faction.getId());
             this.factions.put(faction.getId(), faction);
         }
-        Bukkit.getLogger().warning("factions.size(): " + factions.size());
         super.load();
-        Bukkit.getLogger().warning("AFTER LOAD factions.size(): " + factions.size() + " (super: " + super.factions.size() + ")");
         return factions.size();
     }
 

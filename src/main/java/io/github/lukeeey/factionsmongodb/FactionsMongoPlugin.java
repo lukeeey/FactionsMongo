@@ -1,5 +1,7 @@
 package io.github.lukeeey.factionsmongodb;
 
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.Faction;
 import com.mongodb.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -32,6 +34,12 @@ public class FactionsMongoPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        if (getServer().getPluginManager().getPlugin("Factions") == null) {
+            getLogger().severe("FactionsUUID is not found");
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
+
         getServer().getPluginManager().registerEvents(this, this);
         saveDefaultConfig();
         initMongo();
@@ -57,9 +65,21 @@ public class FactionsMongoPlugin extends JavaPlugin implements Listener {
             board  = new MongoBoard(database.getCollection(getConfig().getString("mongodb.collections.board")));
             fplayers = new MongoFPlayers(database.getCollection(getConfig().getString("mongodb.collections.fplayers")));
 
-            fplayers.load();
-            factions.load();
-            getLogger().info("Done!");
+            // This code is from FactionsUUID
+            int loadedPlayers = fplayers.load();
+            int loadedFactions = factions.load();
+            for (FPlayer fPlayer : fplayers.getAllFPlayers()) {
+                Faction faction = factions.getFactionById(fPlayer.getFactionId());
+                if (faction == null) {
+                    getLogger().info("Invalid faction id on " + fPlayer.getName() + ":" + fPlayer.getFactionId());
+                    fPlayer.resetFactionData(false);
+                    continue;
+                }
+                faction.addFPlayer(fPlayer);
+            }
+            int loadedClaims = board.load();
+            board.clean();
+            getLogger().info("Loaded " + loadedPlayers + " players in " + loadedFactions + " factions with " + loadedClaims + " claims");
         }
     }
 

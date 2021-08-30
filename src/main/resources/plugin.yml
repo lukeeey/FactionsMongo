@@ -3,7 +3,6 @@ version: ${project.version}
 main: io.github.lukeeey.factionsmongodb.FactionsMongoPlugin
 author: lukeeey
 loadbefore: [Factions]
-softdepend: [Factions]
 api-version: 1.13
 description: Adds MongoDB storage to the FactionsUUID plugin
 commands:
