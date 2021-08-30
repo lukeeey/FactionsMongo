@@ -1,9 +1,9 @@
-name: FactionsMongoDBStorage
+name: FactionsMongo
 version: ${project.version}
-main: io.github.lukeeey.factionsmongodb.FactionsMongoDBPlugin
+main: io.github.lukeeey.factionsmongodb.FactionsMongoPlugin
 author: lukeeey
-depend: [Factions]
-load: POSTWORLD
+loadbefore: [Factions]
+softdepend: [Factions]
 api-version: 1.13
 description: Adds MongoDB storage to the FactionsUUID plugin
 commands:

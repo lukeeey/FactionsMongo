@@ -12,14 +12,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.net.InetSocketAddress;
 import java.util.Collections;
 
-public class FactionsMongoDBPlugin extends JavaPlugin {
-    private static final String PASSWORD = "LBf!>n6jnS&3>CM10#q8";
-
+public class FactionsMongoPlugin extends JavaPlugin implements Listener {
     private MongoClient client;
     private MongoDatabase database;
 
@@ -29,15 +32,9 @@ public class FactionsMongoDBPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        getServer().getPluginManager().registerEvents(this, this);
         saveDefaultConfig();
         initMongo();
-
-        factions = new MongoFactions(database.getCollection(getConfig().getString("mongodb.collections.factions")));
-        board  = new MongoBoard(database.getCollection(getConfig().getString("mongodb.collections.board")));
-        fplayers = new MongoFPlayers(database.getCollection(getConfig().getString("mongodb.collections.fplayers")));
-
-        fplayers.load();
-        factions.load();
     }
 
     @Override
@@ -50,6 +47,20 @@ public class FactionsMongoDBPlugin extends JavaPlugin {
             sender.sendMessage(ChatColor.GREEN + "Converted! " + ChatColor.GRAY + "Please restart the server.");
         }
         return true;
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPluginEnable(PluginEnableEvent event) {
+        if (event.getPlugin().getDescription().getName().equalsIgnoreCase("Factions")) {
+            getLogger().info("Factions found, initializing...");
+            factions = new MongoFactions(database.getCollection(getConfig().getString("mongodb.collections.factions")));
+            board  = new MongoBoard(database.getCollection(getConfig().getString("mongodb.collections.board")));
+            fplayers = new MongoFPlayers(database.getCollection(getConfig().getString("mongodb.collections.fplayers")));
+
+            fplayers.load();
+            factions.load();
+            getLogger().info("Done!");
+        }
     }
 
     private void initMongo() {
